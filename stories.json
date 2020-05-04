@@ -1,0 +1,12 @@
+[
+	{
+		"intro" : "Welcome to Looney Lips a fun word game.\n\n",
+		"prompts" : ["a thing", "a feeling", "another thing", "describing word"],
+		"story" : "There once was a %s and it was very %s. One day a %s exploded and the world was %s."
+	},
+	{
+		"intro" : "Welcome to Looney Lips a fun word game.\n\n",
+		"prompts" : ["a thing", "another thing", "a describing word", "a colour"],
+		"story" : "One day a %s walked along the road holding a %s. The weather was %s but the sky was %s"
+	}
+]

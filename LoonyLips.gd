@@ -2,26 +2,63 @@ extends Control
 
 onready var displayText = get_node("VBoxContainer/DisplayText")
 onready var playerText = get_node("VBoxContainer/HBoxContainer/PlayerText")
+onready var buttonText = get_node("VBoxContainer/HBoxContainer/Label")
+
+var player_words = []
+var template = 
+var current_story
+
 
 func _ready():
-	var prompts = ["carrot", "sad", "brick", "dusty"]
-	var story = "There once was a %s and it was very %s. One day a %s exploded and the world was %s."
-	var final = (story % prompts)
-	
-	displayText.text = final
+	pick_current_story()
+	displayText.text = current_story.intro
+	check_player_words_length()
+	playerText.grab_focus()
 
 
 func _on_PlayerText_text_entered(new_text):
-	update_DisplyText(new_text)
+	add_to_player_words()
+	
 
 
 func _on_TextureButton_pressed():
-	var words = playerText.text
-	update_DisplyText(words)
-	
-	
-func update_DisplyText(words):
+	if is_story_done():
+		get_tree().reload_current_scene()
+	else:
+		add_to_player_words()
+
+
+func add_to_player_words():
+	player_words.append(playerText.text)
+	displayText.text = ""
 	playerText.clear()
-	displayText.text = words
+	check_player_words_length()
 
 
+func is_story_done():
+	return player_words.size() == current_story.prompts.size()
+	
+
+func check_player_words_length():
+	if is_story_done():
+		tell_story()
+	else:
+		prompt_player()
+
+
+func tell_story():
+	displayText.text = current_story.story % player_words
+	end_game()
+
+
+func prompt_player():
+	displayText.text += "May I have " + current_story.prompts[player_words.size()] + " please?"
+
+
+func end_game():
+	playerText.queue_free()
+	buttonText.text = "Play again?"
+	
+func pick_current_story():
+	randomize()
+	current_story = template[randi() % template.size()]
