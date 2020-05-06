@@ -5,8 +5,8 @@ onready var playerText = get_node("VBoxContainer/HBoxContainer/PlayerText")
 onready var buttonText = get_node("VBoxContainer/HBoxContainer/Label")
 
 var player_words = []
-var template = 
-var current_story
+
+var current_story = {}
 
 
 func _ready():
@@ -14,6 +14,16 @@ func _ready():
 	displayText.text = current_story.intro
 	check_player_words_length()
 	playerText.grab_focus()
+
+
+func get_from_json(filename):
+	var filepath = "res://" + filename
+	var file = File.new()
+	file.open(filepath, File.READ)
+	var text = file.get_as_text()
+	var data = parse_json(text)
+	file.close()
+	return data
 
 
 func _on_PlayerText_text_entered(new_text):
@@ -60,5 +70,7 @@ func end_game():
 	buttonText.text = "Play again?"
 	
 func pick_current_story():
+	var stories = get_from_json("stories.json")
 	randomize()
-	current_story = template[randi() % template.size()]
+	current_story = stories[randi() % stories.size()]
+
